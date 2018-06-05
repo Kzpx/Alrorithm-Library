@@ -1,3 +1,4 @@
+//素数线性筛模板与证明 by wkc
 #include<stdio.h>
 const int TOP=1e7+10000;//+10000是为了多筛一个素数
 bool e[TOP];
