@@ -1,0 +1,34 @@
+//欧拉函数
+定义：欧拉函数用希腊字母φ表示,φ(N)表示N的欧拉函数，对φ(N)的值,我们可以通俗地理解为小于N且与N互质的数的个数(包含1).
+
+//线性筛筛欧拉函数  （基于欧拉筛法求素数)
+
+bool check[2000000];
+int prime[2000000],tot; //存储素数
+int oula[2000000];
+int main()
+{
+    int n;
+    cin >> n;
+    oula[1] = 1;
+    for(int i = 2;i <= n;i ++)
+    {
+        if(!check[i])
+        {
+            prime[++tot] = i;
+            oula[i] = i-1;
+        }
+        for(int j = 1;j <= tot;j ++)
+        {
+            if(i*prime[j] > n)
+                break ;
+            check[i*prime[j]] = 1;
+            if(i%prime[j] == 0)
+            {
+                oula[i*prime[j]] = oula[i] * prime[j];
+                break;
+            }
+            oula[i*prime[j]] = oula[i] * (prime[j] - 1);
+        }
+    }
+}
