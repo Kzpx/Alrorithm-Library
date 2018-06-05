@@ -1,0 +1,6 @@
+// Pretreatment
+
+C(i,j)=C(i-1,j)+C(i-1,j-1)
+
+C(n,m)=n!/(m! * (n-m)!)
+so pretreatment fac[1]~fac[n]
