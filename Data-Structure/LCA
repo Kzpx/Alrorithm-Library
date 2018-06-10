@@ -1,1 +1,61 @@
 //倍增LAC
+
+const int maxn = 1e5+7;
+int d[maxn],fa[maxn][32]; // d[]表示每个点的深度，fa[][]，记录了每个点向上跳2^j步的点
+int head[maxn*2],nxt[maxn*2],to[maxn*2],tot;
+bool vis[maxn]; // dfs时标记是否访问过
+int n,root; // root为树根
+
+void init(){
+    memset(nxt,0,sizeof(nxt));
+    memset(head,0,sizeof(head));
+    tot=0;
+    for(int i=1;i<=n;i++) vis[i]=false,vv[i]=false;
+}
+
+void addedge(int u,int v){ // 加边
+    to[++tot]=v;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+
+void dfs(int u)  // dfs预处理出每个节点的深度
+{
+    vis[u]=1;
+    for(int i=head[u];i;i=nxt[i]){
+        int v=to[i];
+        if(!vis[v]){
+            fa[v][0]=u;
+            d[v]=d[u]+1;
+            dfs(v);
+        }
+    }
+}
+
+void rmq(){ //求每个节点向上跳2^j步的点
+    for(int j=1;j<=30;j++)
+        for(int i=1;i<=n;i++)
+                fa[i][j]=fa[fa[i][j-1]][j-1];
+}
+
+int LCA(int u,int v) // 求(u,v)的lca
+{
+    if(d[u]<d[v])
+        swap(u,v);
+    int dc=d[u]-d[v];
+    for(int i=0;i<30;i++){ //调至同一高度
+        if((1<<i)&dc)
+            u=fa[u][i];
+    }
+    if(u==v) return u;      // 一个点恰好是另一个点的lca
+    for(int i=30;i>=0;i--){ //找到可以跳的最大的步数，使得(u,v)的lca不同
+        if(fa[u][i] != fa[v][i])
+        {
+            u=fa[u][i];
+            v=fa[v][i];
+        }
+    }
+    u=fa[u][0]; //u，v最后一定在lca的下面
+    return u;
+}
