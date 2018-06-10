@@ -1,1 +1,31 @@
-Idea：
+//Idea：st表用倍增思想/动态规划，以最小值为例，f(i,j)表示：区间 [i,　i+2^j-1] 中的最小值，其中f[i,0] = a[i];
+        所以，对于任意 的一组(i,j)，f(i,j) = min{f(i,j-1),f(i+2^(j-1),j-1)}来使用动态规划计算出来
+        查询为O(1),例如,求区间[L,R]的最小值,找到一个数2^k<(R-L+1)即可，故K=（ln（R-L+1）/(ln2)）(向下取整) （重叠部分不影响）
+        时间复杂度O（nlogn）
+
+int maxx[maxn][35],minx[maxn][35];
+int a[maxn],n;
+
+void rmq_init()  //建立： dp(i,j) = min{dp(i,j-1),dp(i+2^(j-1),j-1)   O(nlogn)
+{
+    for(int i=1;i<=n;i++)
+     maxx[i][0]=minx[i][0]=a[i];
+    int k=floor(log((double)n)/log(2.0)); //C/C++取整函数ceil()大,floor()小
+    for(int i=1;i<=k;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(j + (1 << (i))-1 <= n)
+            {
+                minx[j][i]=min(minx[j][i-1],minx[j+(1<<(i-1))][i-1]);
+                maxx[j][i]=max(maxx[j][i-1],maxx[j+(1<<(i-1))][i-1]);
+            }
+        }
+    }
+}
+
+int rmq(int l,int r)  //查询：返回区间[i,j]的最大/小值     O(1)
+{
+    int k=floor(log((double)(r-l+1))/log(2.0));
+    return max(maxx[l][k],maxx[r-(1<<k)+1][k])-min(minx[l][k],minx[r-(1<<(k))+1][k]);
+}
