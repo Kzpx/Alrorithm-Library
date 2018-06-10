@@ -1,2 +1,45 @@
-Study data link：http://hzwer.com/8053.html
-Idea：
+
+
+//blcok:每块的大小
+//num:块的数量
+//l[]:每块的左边界，r[]:每块的右边界
+//belong[]:每个位置的数属于那一块
+const int maxn = 1e5+7;
+int n,q;
+int belong[maxn],block,l[maxn],r[maxn],num;
+ll a[maxn],Max[maxn];
+
+void build(){
+    block=sqrt(n);
+    num=n/block; if(n%num) num++;
+    for(int i=1;i<=num;i++)
+        l[i]=(i-1)*block, r[i]=i*block; // 处理出每块的左右边界
+    r[num]=n;
+    for(int i=1;i<=n;i++)
+        belong[i]=(i-1)/block+1; // 每个位置的数属于那一块
+    for(int i=1;i<=num;i++)
+        for(int j=l[i];j<=r[i];j++)
+          Max[i]=max(Max[i],a[j]);
+}
+
+void update(int x,int y){
+    a[x]+=y;
+    Max[belong[x]]=max(Max[belong[x]],a[x]);
+}
+
+ll ask(int x,int y){
+    ll ans=0;
+    if(belong[x]==belong[y]){
+        for(int i=x;i<=y;i++)
+            ans=max(ans,a[i]);
+    }
+    else {
+        for(int i=x;i<=r[belong[x]];i++)
+            ans=max(ans,a[i]);
+        for(int i=belong[x]+1;i<=belong[y]-1;i++)
+            ans=max(ans,Max[i]);
+        for(int i=l[belong[y]];i<=y;i++)
+            ans=max(ans,a[i]);
+    }
+    return ans;
+}
