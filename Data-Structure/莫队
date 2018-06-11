@@ -43,3 +43,4 @@ int main()
     }
     sort(q+1,q+m+1);
     solve();
+}
