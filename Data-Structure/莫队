@@ -1,1 +1,45 @@
+int belong[maxn], a[maxn], block, ans[maxn]; // ans[]为根据题目需要更新的东西
+ll f[maxn]; // 存每个询问的答案
+ll Ans=0; //实时的答案
+int n,m,k;
 
+struct node{
+    int l,r,id;
+    friend bool operator < (node a,node b)
+    {
+        if(belong[a.l] == belong[b.l])
+            return a.r<b.r;
+        return belong[a.l] < belong[b.l];
+    }
+}q[maxn];
+
+void del(int p)
+{
+    
+}
+
+void add(int p)
+{
+    
+}
+
+void solve()
+{
+   int L=1, R=0;
+   
+}
+
+int main()
+{
+    scanf("%d%d", &n, &m, &k);
+    block=int(sqrt(n));
+    for(int i=1;i<=n;i++){
+        scanf("%d", &a[i]);
+        belong[i]=(i-1)/block+1;
+    }
+    for(int i=1;i<=m;i++){
+        scanf("%d%d", &q[i].l, &q[i].r);
+        q[i].id=i;
+    }
+    sort(q+1,q+m+1);
+    solve();
