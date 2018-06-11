@@ -1,0 +1,6 @@
+//读入带有空格的字符串
+1.char s[]
+      scanf("%[^\n]",s)   //正则表达式
+ 2.string s
+      getline(cin,s)
+ 
