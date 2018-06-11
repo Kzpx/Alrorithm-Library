@@ -59,3 +59,66 @@ int LCA(int u,int v) // 求(u,v)的lca
     u=fa[u][0]; //u，v最后一定在lca的下面
     return u;
 }
+
+
+//bfs记录深度同时倍增
+
+const int maxn = 10007;
+const int DEG = 20;
+ 
+int head[maxn*2],nxt[maxn*2],to[maxn*2],tot;
+int fa[maxn][DEG];  //fa[i][j]表示结点i的第2^j个祖先
+int deg[maxn];      //深度数组
+bool flag[maxn]; // 标记找根
+int root;    // 根节点
+ 
+void init(){
+    tot=0;
+    memset(head,0,sizeof(head));
+    memset(nxt,0,sizeof(nxt));
+}
+ 
+void add(int u,int v){
+    to[++tot]=v;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+void bfs(int root){
+    queue<int>que;
+    deg[root]=0;
+    fa[root][0]=root;
+    que.push(root);
+    while(!que.empty())
+    {
+        int tmp=que.front();
+        que.pop();
+        for(int i=1;i<DEG;i++)
+            fa[tmp][i]=fa[fa[tmp][i-1]][i-1];
+        for(int i=head[tmp];i;i=nxt[i])
+        {
+            int v=to[i];
+            if(v==fa[tmp][0]) continue;
+            deg[v]=deg[tmp]+1;
+            fa[v][0]=tmp;
+            que.push(v);
+        }
+    }
+}
+ 
+int LCA(int u,int v){
+    if(deg[u]>deg[v]) swap(u,v);
+    int hu=deg[u],hv=deg[v];
+    int tu=u,tv=v;
+    for(int det=hv-hu,i=0;det;det>>=1,i++)
+        if(det&1) tv=fa[tv][i];
+    if(tu==tv) return tu;
+    for(int i=DEG-1;i>=0;i--)
+    {
+        if(fa[tu][i]==fa[tv][i])
+            continue;
+        tu=fa[tu][i];
+        tv=fa[tv][i];
+    }
+    return fa[tu][0];
+}
