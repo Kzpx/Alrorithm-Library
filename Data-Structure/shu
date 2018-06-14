@@ -1,0 +1,23 @@
+// 树状数组
+
+int c[maxn];
+int lowbit(int x)
+{
+    return x&(-x);
+}
+int sum(int  x)
+{
+    int sum=0;
+    while(x>0){
+        sum+=c[x];
+        x-=lowbit(x);
+    }
+    return sum;
+}
+void modfiy(int x,int val)
+{
+    while(x<=1000000){
+        c[x]+=val;
+        x+=lowbit(x);
+    }
+}
