@@ -1,0 +1,207 @@
+// HDU 6291
+
+#include<algorithm>
+#include<iostream>
+#include<stdio.h>
+#include<string.h>
+#include<map>
+#include<set>
+using namespace std;
+const int maxn = 200000+7;
+
+int head[maxn],nxt[maxn*2],to[maxn*2],tot;
+int t,n,m,u,v,col[maxn];
+int fa[maxn][30],d[maxn],dfn[maxn];
+int belong[maxn],block,num,cnt,s[maxn],f[maxn],Ans[maxn],ans[maxn],bl[maxn+10000];
+bool vis[maxn],vv[maxn];
+
+struct node
+{
+    int l,r,id;
+    friend bool operator < (node a,node b)
+    {
+        if(belong[a.l] != belong[b.l])
+            return belong[a.l] < belong[b.l];
+        else
+        return belong[a.r] < belong[b.r];
+    }
+}q[maxn];
+int kk;
+
+void init()
+{
+    cnt=tot=kk=num=0;
+    memset(Ans,0,sizeof(Ans));
+    memset(nxt,0,sizeof(nxt));
+    memset(f,0,sizeof(f));
+    memset(vis,false,sizeof(vis));
+    memset(head,0,sizeof(head));
+    memset(d,0,sizeof(d));
+    memset(dfn,0,sizeof(dfn));
+
+}
+
+void addedge(int u,int v)
+{
+    to[++tot]=v;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+
+void dfs(int x)
+{
+    vis[x]=1;
+    dfn[x]=++kk;
+    int bottom=cnt;
+    for(int i=head[x];i;i=nxt[i])
+    {
+        int v=to[i];
+        if(!vis[v])
+        {
+            d[v]=d[x]+1;
+            fa[v][0]=x;
+            dfs(v);
+            if(cnt - bottom >= block)
+            {
+                ++num;
+                while(cnt!=bottom){
+                    belong[s[cnt--]]=num;
+                }
+            }
+        }
+    }
+    s[++cnt]=x;
+
+}
+
+void init_rmq()
+{
+       fa[1][0]=1;
+    for(int j=1;j<=25;j++)
+        for(int i=1;i<=n;i++)
+        fa[i][j]=fa[fa[i][j-1]][j-1];
+}
+
+int LCA(int u,int v)
+{
+    if(d[u]<d[v])
+        swap(u,v);
+    int dc=d[u]-d[v];
+    for(int i=0;i<25;i++){ //调至同一高度
+        if((1<<i)&dc)
+            u=fa[u][i];
+    }
+    if(u==v) return u;      // 一个点恰好是另一个点的lca
+    for(int i=24;i>=0;i--){ //找到可以跳的最大的步数，使得(u,v)的lca不同
+        if(fa[u][i] != fa[v][i])
+        {
+            u=fa[u][i];
+            v=fa[v][i];
+        }
+    }
+    return  fa[u][0]; //u，v最后一定在lca的下面
+}
+
+void rev(int x)
+{
+    if(!vis[x]){
+        f[col[x]]++;
+        if(f[col[x]]%2)
+             Ans[bl[col[x]]]++;
+        else
+             Ans[bl[col[x]]]--;
+        vis[x]=1;
+    }
+    else{
+        f[col[x]]--;
+        if(f[col[x]]%2)
+            Ans[bl[col[x]]]++;
+        else
+            Ans[bl[col[x]]]--;
+        vis[x]=0;
+    }
+    //vis[x]^=1;
+}
+
+void solve(int uu,int vv)
+{
+    while(uu!=vv)
+    {
+        if(d[uu] > d[vv])
+            swap(uu,vv);
+        rev(vv);
+        vv=fa[vv][0];
+    }
+}
+
+int main()
+{
+    int k=(sqrt(205000));
+    for(int i=1;i<=205000;i++)
+        bl[i]=(i-1)/k+1;
+    scanf("%d", &t);
+    while(t--)
+    {
+        scanf("%d%d", &n, &m);
+        block=sqrt(n);
+        init();
+        for(int i=1;i<=n;i++)
+             scanf("%d", &col[i]);
+
+        for(int i=1;i<=n-1;i++)
+        {
+            scanf("%d%d", &u, &v);
+            addedge(u,v);
+            addedge(v,u);
+        }
+        dfs(1);
+        init_rmq();
+        ++num;
+        while(cnt)
+            belong[s[cnt--]]=num;
+        for(int i=1;i<=m;i++)
+        {
+            scanf("%d%d", &u, &v);
+            if(belong[u] > belong[v])
+                swap(u,v);
+            q[i].l=u;
+            q[i].r=v;
+            q[i].id=i;
+        }
+        sort(q+1,q+m+1);
+        q[0].l=q[0].r=1;
+        for(int i=1;i<=m;i++)
+        {
+            int lca=LCA(q[i].l,q[i].r);
+            solve(q[i-1].l, q[i].l);
+            solve(q[i-1].r, q[i].r);
+            rev(lca);
+            int op;
+            for(int i=1;i<=k+1;i++)
+            {
+                if(Ans[i] != k)
+                {
+                    for(int j=(i-1)*k+1;j<maxn;j++)
+                    {
+                        if(f[j]%2==0)
+                        {
+                            op=j;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            ans[q[i].id]=op;
+            rev(lca);
+        }
+        for(int i=1;i<=m;i++)
+        {
+            printf("%d\n",ans[i]);
+        }
+       // init();
+    }
+    return 0;
+}
+
