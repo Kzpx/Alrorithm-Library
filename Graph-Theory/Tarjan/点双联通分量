@@ -1,1 +1,71 @@
-Idea：
+// Tarjan
+
+// u[],v[] 有向边集合
+// tms: dfs时间戳
+// scc:缩点后点的数量
+// belong数组的值是1~scc
+// dfn[]: 每个点访问的时间戳
+// low[]: 确定强联通的祖先
+// vector<int>dag[]: 缩点后的新图
+
+const int maxn = 5000+7; //点数
+const int maxm = 5000+7; //边数
+
+
+int head[maxm],nxt[maxm],to[maxm],tot, u[maxm], v[maxm];
+int top, tms, scc, low[maxn], dfn[maxn], Stack[maxn], belong[maxn];
+vector<int>dag[maxn]; // 缩点后的新图
+bool vis[maxn],Instack[maxn]; 
+int n, m; //n:点数  m:边数
+
+
+void init()
+{
+    memset(head,0,sizeof(head));
+    tot=top=scc=tms=0;
+}
+
+void addedge(int u,int v)
+{
+    to[++tot]=v;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+void tarjan(int u)
+{
+   // cout<<123<<endl;
+    int v;
+    Stack[++top]=u;
+    low[u]=dfn[u]=++tms;
+    Instack[u]=true;
+    for(int i=head[u];i;i=nxt[i])
+    {
+        v=to[i];
+        if(!dfn[v])
+        {
+           tarjan(v);
+           if( low[v] < low[u])
+            low[u]=low[v];
+        }
+        else if(Instack[v] && low[v] < low[u])
+            low[u] = low[v];
+    }
+    if(dfn[u]==low[u])
+    {
+        scc++;
+        do{
+            v=Stack[--top];
+            Instack[v]=false;
+            belong[v]=scc;
+        }while(u!=v);
+    }
+}
+
+void suodian(){
+    for(int i=1;i<=m;i++){
+        if(belong[u[i]]==belong[v[i]])
+            continue;
+        dag[belong[u[i]]].push_back(belong[v[i]]);
+    }
+}
