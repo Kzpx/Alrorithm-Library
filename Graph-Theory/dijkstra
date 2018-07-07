@@ -1,1 +1,76 @@
 Ideas：
+
+
+Dijkstra
+
+Trick：按d排序！！
+typedef long long LL;
+const int maxn=210000;
+priority_queue<pair<LL,int>,vector<pair<LL,int> >,greater<pair<LL,int> > > q;
+const LL INF=1e18;
+LL dis[110000];
+int vis[110000];
+int n,m,x;
+int head[maxn],nxt[maxn],to[maxn],tot;
+LL w[210000];
+void add(int u,int v,int c)
+{
+    ++tot;
+    to[tot]=v;
+    w[tot]=c;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+LL dij(int limt)
+{
+    for(int i=1;i<=n;i++)
+        dis[i]=INF,vis[i]=0;
+    dis[1]=0;
+    q.push(make_pair(0,1));
+    while(!q.empty())
+    {
+        int now=q.top().second;
+        q.pop();
+        if(vis[now])
+            continue;
+        vis[now]=1;
+        for(int i=head[now];i!=0;i=nxt[i])
+        {
+            if (w[i]<=limt&&dis[to[i]]>dis[now]+w[i])
+            {    dis[to[i]]=dis[now]+w[i];
+                q.push(make_pair(dis[to[i]],to[i]));
+            }
+        }
+    }
+    return dis[n];
+}
+LL dist;
+int ans;
+int check(int x)
+{
+    return dij(x)<=dist;
+}
+int main()
+{
+    scanf("%d%d%d", &n, &m,&x);
+    int u,v;
+    int c;
+    for(int i=1;i<=m;i++)
+    {
+        scanf("%d%d%d",&u,&v,&c);
+        add(u,v,c);
+        add(v,u,c);
+    }
+    dist=dij(1000000000);
+    dist=dist*(100LL+x)/100;
+    int l=1,r=1000000000;
+    while (l<=r)
+    {
+          int mid=(l+r)/2;
+          if (check(mid)) ans=mid,r=mid-1;
+          else l=mid+1;
+    }
+    printf("%d\n",ans);
+    return 0;
+}
