@@ -1,0 +1,24 @@
+/*  merge sort   
+   求逆序对数量 
+*/
+
+int  num[maxn], t[maxn];
+ll ans; // 逆序对数
+void merge_sort(int l, int r) {
+    int mid, p, q, i, j, len;
+    if(l >= r)    return ;
+    mid = (l + r) >> 1;
+    len = r - l + 1;
+    p = l; q = mid + 1;  j = l;
+    merge_sort(l, mid);
+    merge_sort(mid + 1, r);
+    for(i = 0; i < len; ++i) {
+        if((q > r) || (num[p] <= num[q] && p <= mid)) {
+            t[j++] = num[p++];
+        } else {
+            t[j++] = num[q++];
+            ans+=mid-p+1;
+        }
+    }
+    for(i = l; i <= r; ++i)    num[i] = t[i];
+}
