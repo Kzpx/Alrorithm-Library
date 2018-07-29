@@ -1,0 +1,27 @@
+// 组合数预处理
+
+法一：
+C(N,M)=C(N-1,M)+C(N-1,M-1)
+
+法二：
+C(n,m)=n!/(m! * (n-m)!)
+所以直接预处理出：fac[1]~fac[n]
+
+组合数取模
+求单个C(N,M)%mod - Lucas
+时间复杂度O(sqrt(mod))
+
+大部分情况下
+直接预处理阶乘，直接求C(N,M)%mod
+
+预处理组合数
+int c[maxn][maxn];
+
+void init(int num)
+{
+    for(int i=0;i<=num;i++)  // num<maxn 
+        c[i][i]=c[i][0]=c[i][1]=1;
+    for(int i=1;i<=num;i++)
+        for(int j=1;j<=i;j++)
+        c[i][j]=(c[i-1][j-1]+c[i-1][j])%mod;
+}
