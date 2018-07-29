@@ -5,7 +5,7 @@ int found(int x){  //
     else  fa[x]=found(fa[x]);
 }
 
-void join(int x,int y)  //启发式合并
+void join(int x,int y)  //启发式合并,把rank小的接在rank大的上，若rank[x] < rank[y], fa[x]=y
 {
    
 }
