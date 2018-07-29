@@ -1,1 +1,18 @@
+// 逆元
 
+ll gcd(ll a,ll b){return b?gcd(b,a%b):a;}  
+
+ll lcm(ll a,ll b){return a/gcd(a,b)*b;}  
+
+ll inv(ll b){if(b==1)return 1; return (mod-mod/b)*inv(mod%b)%mod;}  
+
+ll fpow(ll n,ll k){ll r=1;for(;k;k>>=1){if(k&1)r=r*n%mod;n=n*n%mod;}return r;}
+
+std::vector<int> preInverse(int n, int md) {
+  std::vector<int> inv(n + 1);
+  inv[1] = 1;
+  for (int i = 2; i <= n; ++i) {
+    inv[i] = (long long)(md - md / i) * inv[md % i] % md;
+  }
+  return inv;
+}
