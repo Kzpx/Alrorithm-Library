@@ -1,1 +1,11 @@
-Idea:
+//并查集
+
+int found(int x){  // 
+    if(x==fa[x])  return x;
+    else  fa[x]=found(fa[x]);
+}
+
+void join(int x,int y)  //启发式合并
+{
+   
+}
