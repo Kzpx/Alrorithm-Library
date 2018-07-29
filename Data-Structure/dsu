@@ -1,5 +1,14 @@
 //并查集
 
+int fa[maxn], rank[maxn];
+
+void init(){
+     for(int i=0;i<maxn;i++) {
+         fa[i]=i;
+         rank[i]=0;
+     }
+}
+
 int found(int x){  // 
     if(x==fa[x])  return x;
     else  fa[x]=found(fa[x]);
@@ -7,5 +16,16 @@ int found(int x){  //
 
 void join(int x,int y)  //启发式合并,把rank小的接在rank大的上，若rank[x] < rank[y], fa[x]=y
 {
-   
+    int xx=found(x);
+    int yy=found(y);
+    if(xx!=yy){
+        if(rank[xx]<ranh[yy])
+          fa[xx]=yy;
+        else if(rank[xx]>rank[yy])
+          fa[yy]=xx;
+        else{
+          fa[xx]=yy;
+          rank[yy]++;
+        }
+    }
 }
