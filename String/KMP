@@ -2,6 +2,8 @@
 // 用法
 // 1、求一个串是否是另一个的子串
 // 2、是子串，并有几个子串
+// nex[i]:表示当前的位置i失配，前后缀的最长匹配长度 (从0开始
+//  ( len%(len-nex[len])==0 && nex[len]!=0 ) 说明字符串存在循环节，长度为：len-nex[len]
 int nex[maxn];
 string s, b;
 void getNext()
