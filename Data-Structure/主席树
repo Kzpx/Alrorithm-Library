@@ -1,0 +1,63 @@
+// 主席树
+
+const int maxn = 1e5+7;
+
+int n,q,l,r,a[maxn],root[maxn],cnt;
+
+struct node{
+    int l,r,sum;
+}t[maxn*40];
+
+void update(int l,int r,int &x,int y,int pos)
+{
+    t[++cnt]=t[y],t[cnt].sum++,x=cnt;
+    if(l==r) return;
+    int mid=(l+r)/2;
+    if(pos<=mid) update(l,mid,t[x].l,t[y].l,pos);
+    else update(mid+1,r,t[x].r,t[y].r,pos);
+}
+
+int query(int l,int r,int x,int y,int pos)
+{
+    if(pos<=l) return t[y].sum-t[x].sum;
+    int mid=(l+r)/2;
+    int sum=0;
+    if(pos<=mid)
+    {
+        sum+=query(l ,mid, t[x].l, t[y].l, pos);
+        sum+=query(mid+1, r, t[x].r, t[y].r, pos);
+    }
+    else sum+=query(mid+1,r,t[x].r,t[y].r,pos);
+    //cout<<pos<<' '<<sum<<endl;
+    return sum;
+
+}
+
+int main()
+{
+    while(scanf("%d%d",&n,&q)!=EOF)
+    {
+        for(int i=1;i<=n;i++)
+        t[i].sum=0;
+
+    for(int i=1;i<=n;i++)
+        scanf("%d",&a[i]),update(1,n,root[i],root[i-1],a[i]);
+    while(q--)
+    {
+        scanf("%d%d",&l,&r);
+        int ql=1,qr=n;
+        while(ql<qr)
+        {
+            int mid=(ql+qr+1)/2;
+            if(query(1,n,root[l-1],root[r],mid) >= mid)
+                ql=mid;
+            else
+                qr=mid-1;
+            //   cout<<123<<endl;
+        }
+        printf("%d\n",ql);
+    }
+
+    }
+    return 0;
+}
