@@ -1,4 +1,4 @@
-//匈牙利算法
+//匈牙利算法, 时间复杂度O(n*m)
 Idea：不断寻找增广路
 
 int head[maxn], nxt[maxn], to[maxn] ,tot;
