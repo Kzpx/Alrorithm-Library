@@ -83,7 +83,7 @@ struct Dinic
         while(BFS())
         {
             memset(cur, 0, sizeof(cur));
-            flow += DFS(s,maxn);
+            flow += DFS(s,INF);
         }
         return flow;
     }
