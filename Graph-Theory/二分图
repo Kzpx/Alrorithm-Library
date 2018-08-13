@@ -1,2 +1,50 @@
 //匈牙利算法
-Idea：
+Idea：不断寻找增广路
+
+int head[maxn], nxt[maxn], to[maxn] ,tot;
+int vis[maxn], p[maxn];
+
+void init()
+{
+    tot=0;
+    memset(nxt,0, sizeof(nxt));
+    memset(head, 0 , sizeof(head));
+}
+
+void addedge(int u,int v)
+{
+    to[++tot]=v;
+    nxt[tot]=head[u];
+    head[u]=tot;
+}
+
+bool Hungarian(int x)
+{
+    for(int i=head[x];i;i=nxt[i])
+    {
+        int v=to[i];
+        if(!vis[v])
+        {
+            vis[v]=1;
+            if(!p[v] || Hungarian(p[v]))
+            {
+                p[v]=x;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+int Maxmatch()
+{
+    memset(p, 0, sizeof(p));
+    int cnt=0;
+    for(int i=1;i<=n;i++)
+    {
+        memset(vis,0,sizeof(vis));
+        if(Hungarian(i))
+            cnt++;
+    }
+    return cnt;
+}
