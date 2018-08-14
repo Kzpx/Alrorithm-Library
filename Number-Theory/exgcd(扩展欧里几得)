@@ -1,0 +1,11 @@
+// exgcd(扩展欧里几得)
+// 传参前，x,y要初始化为0
+// 返回值为gcd(a,b)
+
+int exgcd(int a,int b,int &x,int &y)
+{
+    int d=a;
+    if(b!=0){ d=exgcd(b,a%b,y,x); y-=(a/b)*x; }
+    else{ x=1; y=0; }
+    return d;
+}
