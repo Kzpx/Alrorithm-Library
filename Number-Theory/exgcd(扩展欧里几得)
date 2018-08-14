@@ -9,3 +9,16 @@ int exgcd(int a,int b,int &x,int &y)
     else{ x=1; y=0; }
     return d;
 }
+
+ll solve(){
+    ll M=a[1],R=r[1],x,y,d;
+    for(int i=2;i<=n;i++){
+        d=exgcd(M,a[i],x,y);
+        if((R-r[i])%d!=0) return -1;  //无解
+        x=(R-r[i])/d*x%a[i]; //这才是真正的x，记得模a[i]。
+        R-=x*M;   //特解x0，新的余数。
+        M=M/d*a[i]; //新的模数。
+        R%=M;
+    }
+    return (R%M+M)%M;
+}
