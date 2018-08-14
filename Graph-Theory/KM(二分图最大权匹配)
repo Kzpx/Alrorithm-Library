@@ -1,8 +1,11 @@
-// KM(最大权匹配)
+// KM(二分图最大权匹配)
 
 // 注意是从0开始的
 // ask()函数初始化KM内的函数
 // 可以输出方案
+// n要取max(n,m)
+// km.a[u][v]: u,v之间的边权
+// km.fl[i]:表示第i个男生匹配的女生编号(未匹配为-1)，权值即为km.a[i][km.fl[i]]
 
 typedef int ll;//typedef long long ll;
 const int N=407,INF=1e9+7,NPOS=-1;
