@@ -1,1 +1,18 @@
 // 头文件
+
+#include <bits/stdc++.h>
+#define rep(i,m,n) for(i=m;i<=n;i++)
+#define rsp(it,s) for(set<int>::iterator it=s.begin();it!=s.end();it++)
+#define mod 1000000007
+#define inf 0x3f3f3f3f
+#define vi vector<int>
+#define pb push_back
+#define mp make_pair
+#define fi first
+#define se second
+#define ll long long
+#define pi acos(-1.0)
+#define pii pair<int,int>
+#define Lson L, mid, rt<<1
+#define Rson mid+1, R, rt<<1|1
+const int maxn = 1e5 + 10;
