@@ -10,6 +10,7 @@ int exgcd(int a,int b,int &x,int &y)
     return d;
 }
 
+ll a[100005],r[100005]; // a[]:表示mod模数，r[]:余数
 ll solve(){
     ll M=a[1],R=r[1],x,y,d;
     for(int i=2;i<=n;i++){
