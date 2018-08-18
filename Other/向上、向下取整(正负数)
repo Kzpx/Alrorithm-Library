@@ -1,0 +1,4 @@
+ // 向上、向下取整(正负数)
+ 
+ ll floor(ll x, ll y) {  if(x >= 0) return x / y; return (x - y + 1) / y; }
+ ll ceil (ll x, ll y) {  if(x >= 0) return (x + y - 1) / y;  return x / y; }
