@@ -20,13 +20,16 @@ void init(ll n)
     // return ans;
 }
 
-筛选法（基于素数筛） --- 求1~N所有的欧拉函数
-void Init()
-{
-     for(int i=1;i<N;i++)
-       euler[i]=i;
-     for(int i=2;i<N;i++)                 //i=1时，euler[1] 不变
-        if(euler[i]==i)
-           for(int j=i;j<N;j+=i)
-              euler[j]=euler[j]/i*(i-1);
+//求1~N所有的欧拉函数
+const int N = 4e7+2;
+int euler[N], tot, prime[N];  //tot计数，表示prime[N]中有多少质数
+void Euler(){
+    euler[1] = 1;
+    for(int i = 2; i < N; i ++){
+        if(!euler[i]){ euler[i] = i-1;  prime[tot ++] = i; }
+        for(int j = 0; j < tot && 1ll*i*prime[j] < N; j ++){
+            if(i % prime[j]) euler[i*prime[j]] = euler[i]*(prime[j]-1);
+            else{ euler[i*prime[j]] = euler[i]*prime[j]; break; }
+        }
+    }
 }
