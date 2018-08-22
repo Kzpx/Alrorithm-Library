@@ -1,0 +1,3 @@
+// 小数位数
+
+cout << fixed << setprecision(6) << n << endl;
