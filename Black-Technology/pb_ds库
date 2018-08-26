@@ -1,0 +1,9 @@
+// pb_ds库
+
+// 头文件
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/hash_policy.hpp>
+
+
+// 哈希表，和正常map一样用
+__gnu_pbds::cc_hash_table 
