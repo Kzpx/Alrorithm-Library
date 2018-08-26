@@ -1,0 +1,36 @@
+// 矩阵快速幂
+
+const int mod = 1e9+7;
+int a[10], p;
+
+struct matrix
+{
+    int ma[sz][sz];
+    matrix friend operator *(const matrix a,const matrix b){
+        matrix ret;
+        memset(ret.ma,0,sizeof(ret.ma));
+        for(int i=0;i<p;i++){
+            for(int j=0;j<p;j++){
+                for(int k=0;k<p;k++){
+                    ret.ma[i][j] = (ret.ma[i][j] + 1LL * a.ma[i][k] * b.ma[k][j]%mod)%mod;
+                }
+            }
+        }
+        return ret;
+    }
+}ans;
+
+matrix multipow(matrix x, int k){
+    memset(ans.ma,0,sizeof(ans.ma));
+    for(int i=0;i<p;i++){
+        ans.ma[i][i] = 1;
+    }
+    while(k){
+        if(k&1)ans=ans*x;
+        k>>=1;
+        x=x*x;
+    }
+    return ans;
+}
+
+
