@@ -6,7 +6,17 @@ Dijkstra
 Trick：按d排序！！
 typedef long long LL;
 const int maxn=210000;
-priority_queue<pair<LL,int>,vector<pair<LL,int> >,greater<pair<LL,int> > > q;
+struct HeapNode{
+    HeapNode(ll _d, ll _u, ll _k) : d(_d), u(_u), k(_k) {}
+    ll d; int u, k;
+    bool operator < (const HeapNode &x) const {
+        return d>x.d || (d==x.d && (u < x.u || (u==x.u && k<x.k)));
+    }
+};
+
+priority_queue<HeapNode>q;
+
+
 const LL INF=1e18;
 LL dis[110000];
 int vis[110000];
