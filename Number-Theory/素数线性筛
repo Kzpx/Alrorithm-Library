@@ -1,44 +1,15 @@
-//素数线性筛模板与证明 by wkc
-#include<stdio.h>
-const int TOP=1e7+10000;//+10000是为了多筛一个素数
-bool e[TOP];
-int p[TOP/5];
-int pnum;
-void prime()//O(n)筛素数，e[x]==0表示x为素数
-{
-    e[0]=e[1]=1;pnum=0;
-    for(int i=2;i<TOP;i++)
-    {
-        if(e[i]==0)p[++pnum]=i;
-        for(int j=1;j<=pnum&&p[j]*i<TOP;j++)
+
+const int N=1e5+7
+int prime[N], tot;
+bool check[N]
+void sushu(){
+    for(int i=2;i<maxn;i++){
+        if(!check[i]) prime[tot++]=i;
+        for(int j=0;j<tot;j++)
         {
-            e[p[j]*i]=1;
-            if(i%p[j]==0)break;
+            if(i*prime[j]>=maxn) break;
+            check[i*prime[j]]=1;
+            if(i%prime[j]==0) break;
         }
     }
 }
-int main()
-{
-    prime();
-    return 0;
-}
-/*
-for(int i=2;i<TOP;i++)
-{
-    if(e[i]==0)p[++pnum]=i;//如果这个数是素数，记录保存在p中
-    不管这个数是不是素数，使用这个数和前面的素数筛选
-    每个数都可以表示成p1^a1*p2^a2...pn^an(p1<p2<...<pn)的形式
-    所以其就可以一定可以用p1*(p1^(a1-1)*p2^a2...pn^an)来筛除
-    我们枚举所有素数，肯定能枚举得到关于i的最小的素因子
-    for(int j=1;j<=pnum&&p[j]*i<TOP;j++)
-    {
-        e[p[j]*i]=1;//p[j]*i一定不是素数，可以被筛掉。
-        if(i%p[j]==0)break;//对于i，我们只扩展——1，i*"i中不包含的素数"；2，i*"i所包含的最小素数"
-        如何保证每个合数都被筛到？
-        对于i，我们只扩展——1，i*"i中不包含的素数"；2，i*"i所包含的最小素数"。
-        比如，p1^a1*p2^a2...pm^am(p1<p2<...<pm)可以筛得的是p1^(a1+1)*p2^a2...pm^am(p1<p2<...<pm),或者p0^a0*p1^a1*p2^a2...pm^am(p0<p1<p2<...<pm,p0表示比p1小且原来不在x中的素数)
-        这样子，每个数是一定能被筛出来的，因为p1^a1*p2^a2...pn^an(p1<p2<...<pn)前面一定有p1^(a1-1)*p2^a2...pn^an(p1<p2<...<pn)，而p1^(a1-1)*p2^a2...pn^an(p1<p2<...<pn)是一定可以筛到它的
-        由于这个关系，显然也保证了每个数最多只被筛一次。
-    }
-}
-*/
