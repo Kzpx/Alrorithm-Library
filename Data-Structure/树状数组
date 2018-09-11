@@ -1,5 +1,5 @@
 // 树状数组
-
+// 支持前后缀和，单点修改
 int c[maxn];
 int lowbit(int x)
 {
