@@ -8,22 +8,17 @@
 // low[]: 确定强联通的祖先
 // vector<int>dag[]: 缩点后的新图
 
-const int maxn = 5000+7; //点数
-const int maxm = 5000+7; //边数
+const int maxn = 10007;
+const int maxm = 50007;
 
+int head[maxn], nxt[maxm], to[maxm], tot;
+int u[maxm], v[maxm];
+int dfn[maxn], low[maxn], belong[maxn], scc, tms;
+vector<int>dag[maxn];
+stack<int>st;
+bool vis[maxn], ins[maxn];
+int n,  m;
 
-int head[maxm],nxt[maxm],to[maxm],tot, u[maxm], v[maxm];
-int top, tms, scc, low[maxn], dfn[maxn], Stack[maxn], belong[maxn];
-vector<int>dag[maxn]; // 缩点后的新图
-bool vis[maxn],Instack[maxn]; 
-int n, m; //n:点数  m:边数
-
-
-void init()
-{
-    memset(head,0,sizeof(head));
-    tot=top=scc=tms=0;
-}
 
 void addedge(int u,int v)
 {
@@ -34,38 +29,76 @@ void addedge(int u,int v)
 
 void tarjan(int u)
 {
-   // cout<<123<<endl;
-    int v;
-    Stack[++top]=u;
-    low[u]=dfn[u]=++tms;
-    Instack[u]=true;
-    for(int i=head[u];i;i=nxt[i])
-    {
-        v=to[i];
-        if(!dfn[v])
-        {
+   dfn[u]=low[u]=++tms;
+   st.push(u); ins[u]=1;
+   for(int i=head[u]; i; i=nxt[i])
+   {
+       int v=to[i];
+       if(!dfn[v])
+       {
            tarjan(v);
-           if( low[v] < low[u])
-            low[u]=low[v];
-        }
-        else if(Instack[v] && low[v] < low[u])
-            low[u] = low[v];
-    }
-    if(dfn[u]==low[u])
+           low[u]=min(low[u], low[v]);
+       }
+       else if(ins[v]){
+        low[u]=min(low[u], dfn[v]);
+       }
+   }
+   if(dfn[u] == low[u]){
+      belong[u]=++scc;
+      int y;
+      do{
+        y=st.top();
+        st.pop();
+        ins[y]=0;
+        belong[y]=scc;
+      }while(u!=y);
+   }
+}
+
+int suodian()
+{
+    for(int i=1; i<=m; i++)
     {
-        scc++;
-        do{
-            v=Stack[--top];
-            Instack[v]=false;
-            belong[v]=scc;
-        }while(u!=v);
+        if(belong[u[i]] == belong[v[i]])
+            continue;
+        dag[belong[u[i]]].push_back(belong[v[i]]); //可能两个强联通之间有多条边
+    }
+    int cnt=0, id=0;
+    for(int i=1; i<=scc; i++)
+    {
+        if(dag[i].size() == 0)
+        {
+            cnt++;
+            for(int j=1; j<=n; j++){
+                if(belong[j] == i)
+                    id++;
+            }
+        }
+    }
+    if(cnt==1)
+        return id;
+    else
+        return 0;
+}
+
+void solve()
+{
+    for(int i=1; i<=n; i++)
+    {
+        if(!dfn[i])
+            tarjan(i);
     }
 }
 
-void suodian(){
-    for(int i=1;i<=m;i++){
-        if(belong[u[i]]==belong[v[i]])
-            continue;
-        dag[belong[u[i]]].push_back(belong[v[i]]);
+int main()
+{
+    scanf("%d%d", &n, &m);
+    for(int i=1; i<=m; i++)
+    {
+        scanf("%d%d", &u[i], &v[i]);
+        addedge(u[i], v[i]);
     }
+    solve();
+    printf("%d\n", suodian());
+    return 0;
 }
