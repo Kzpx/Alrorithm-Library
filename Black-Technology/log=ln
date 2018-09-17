@@ -1,0 +1,2 @@
+// log=ln , c++中log默认是以自然底数e为底的
+//换底 logx^y=log y / log x即可
