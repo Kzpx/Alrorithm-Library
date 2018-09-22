@@ -1,1 +1,76 @@
-Idea:
+//2-SAT
+
+//SCC后剩下的缩点都是scc[i]=i，若最后剩下n个点，并不一定是1~n
+//注意关注的key，key是什么就是什么是起点
+const int mod = 1e9+7;
+const int maxn = 2000+7;
+
+stack<int>s;
+bool vis[maxn];
+int dfn[maxn],low[maxn],scc[maxn],idx;
+vector<int>g[maxn];
+
+int n,r,l;
+int x[maxn],y[maxn];
+
+
+void tarjan(int u)
+{
+    dfn[u]=low[u]=++idx;
+    s.push(u);
+    vis[u]=true;
+    int v;
+    for(int i=0;i<g[u].size();++i){
+        v=g[u][i];
+        if(dfn[v]==0){
+            tarjan(v);
+            low[u]=min(low[u],low[v]);
+        }else if(vis[v])
+            low[u]=min(low[u],dfn[v]);
+    }
+    if(dfn[u]==low[u])
+        do{
+            v=s.top();
+            s.pop();
+            scc[v]=u;//指向根节点
+            vis[v]=false;
+        }while(u!=v);
+}
+
+int _abs(int x)
+{
+    if(x>0)return x;
+    return -x;
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin>>n>>r>>l;
+    for(int i=0;i<l;i++)
+    cin>>x[i]>>y[i];
+    for(int i=0;i<l;i++)
+    {
+        for(int j=i+1;j<l;j++)
+        {
+            if((x[i]==x[j]) && _abs(y[i]-y[j])<=2*r)  g[2*j].push_back(2*i+1),g[2*i].push_back(2*j+1);
+            if(y[i]==y[j] && _abs(x[i]-x[j])<=2*r)  g[2*j+1].push_back(2*i),g[2*i+1].push_back(2*j);
+        }
+    }
+    for(int i=0;i<2*l;i++)
+    {
+        if(!dfn[i])
+            tarjan(i);
+    }
+    bool flag=false;
+    for(int i=0;i<l;i++)
+    {
+        if(scc[i*2]==scc[2*i+1])
+            flag=true;
+    }
+    if(flag)
+        cout<<"NO"<<endl;
+    else
+        cout<<"YES"<<endl;
+    return 0;
+}
