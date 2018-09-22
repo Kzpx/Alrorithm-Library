@@ -14,7 +14,8 @@ int cmp(int *r,int a,int b,int k)
     return r[a]==r[b]&&r[a+k]==r[b+k];
 }
 
-void getsa(int *r,int *sa,int n,int m)  //n为添加0后的总长
+//n为添加0后的总长,m为字符的最大值(注意ASCII值)
+void getsa(int *r,int *sa,int n,int m)  
 {
     int i,j,p,*x=wa,*y=wb,*t;
     for(i=0; i<m; i++)  wsf[i]=0;
@@ -49,5 +50,24 @@ void getht(int *r,int n) //n为添加0后的总长
         j=sa[rk[i]-1];
         while(r[i+k]==r[j+k]) k++;
         ht[rk[i]]=k;
+    }
+}
+
+int main()
+{
+    int t;
+    scanf("%d", &t);
+    while(t--)
+    {
+        scanf("%s", hs);
+        int len=strlen(hs);
+        for(int i=0;i<len;i++)  ns[i]=int(hs[i]);
+        ns[len]=0;
+        getsa(ns, sa, len, 256);
+        getht(ns, len);
+        int ans=len*(len+1)/2;
+        for(int i=2;i<=len;i++)
+            ans-=ht[i];
+        printf("%d\n", ans);
     }
 }
