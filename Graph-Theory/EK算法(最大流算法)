@@ -1,23 +1,19 @@
-//EK算法(最大流算法)
-
-
-const int maxn = 100000+7;
-
-int n,m,u,v,c;
+const int maxn = 222;
+const int INF=1e9+7;
 
 struct Edge
 {
     int from, to, cap, flow;
-    Edge(int u,int v,int c,int f):from(u), to(v), cap(c), flow(f){}
+    Edge(int u, int v, int c, int f):from(u), to(v), cap(c), flow(f){}
 };
 
 struct EdmondsKarp
 {
     int n, m;
-    vector<Edge> edges;   // 边数的两倍
-    vector<int> G[maxn];  // 邻接表，G[i][j]表示节点i的第j条边在e数组的序号
-    int a[maxn];          //当起点到i的可改流量
-    int p[maxn];          //最短路树上p的入弧编号(path路径)
+    vector<Edge> edges;
+    vector<int> G[maxn];
+
+    int p[maxn];
 
     void init()
     {
@@ -29,7 +25,7 @@ struct EdmondsKarp
     {
         edges.push_back(Edge(from, to, cap, 0));
         edges.push_back(Edge(to, from, 0, 0));
-        m = edges.size();
+        m=edges.size();
         G[from].push_back(m-2);
         G[to].push_back(m-1);
     }
@@ -40,49 +36,32 @@ struct EdmondsKarp
         while(1)
         {
             memset(a, 0, sizeof(a));
-            queue<int> Q;
-            Q.push(s);
-            a[s]=1000000000+2;
-            while(!Q.empty())
+            queue<int>q;
+            q.push(s);
+            a[s]=1e9+7;
+            while(!q.empty())
             {
-                int x=Q.front(); Q.pop();
-                for(int i=0; i<G[x].size(); i++)
+                int x=q.front(); q.pop();
+                for(int i=0;i<G[x].size();i++)
                 {
                     Edge& e=edges[G[x][i]];
-                    if(!a[e.to] && e.cap > e.flow)
+                    if(!a[e.to] && e.cap>e.flow)
                     {
-                        p[e.to] = G[x][i];
-                        a[e.to] = min(a[x], e.cap-e.flow);
-                        Q.push(e.to);
+                        p[e.to]=G[x][i];
+                        a[e.to]=min(a[x], e.cap-e.flow);
+                        q.push(e.to);
                     }
                 }
                 if(a[t]) break;
-             }
-             if(!a[t]) break;
-             for(int u=t; u!=s; u=edges[p[u]].from)
-             {
-                 edges[p[u]].flow += a[t];
-                 edges[p[u]^1].flow -= a[t];
-             }
-             flow += a[t];
+            }
+            if(!a[t]) break;
+            for(int u=t; u!=s; u=edges[p[u]].from)
+            {
+                edges[p[u]].flow+=a[t];
+                edges[p[u]^1].flow-=a[t];
+            }
+            flow+=a[t];
         }
         return flow;
     }
-
 };
-
-int main()
-{
-    while(scanf("%d%d", &m, &n)!=EOF)
-    {
-        EdmondsKarp now;
-        now.init();
-        for(int i=1;i<=m;i++)
-        {
-            scanf("%d%d%d", &u, &v, &c);
-            now.Addedge(u, v, c);
-        }
-        printf("%d\n", now.Maxflow(1, n));
-    }
-    return 0;
-}
