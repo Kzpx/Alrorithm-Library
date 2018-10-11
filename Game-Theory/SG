@@ -1,2 +1,111 @@
-Introduction
-Idea：
+
+// dfs 打表 速度更快
+
+/* 注意:f数组要按从小到大排序,SG函数要初始化为-1,对于每个集合只需初始化1遍 */
+/* n是集合f的大小,f[i]是定义的特殊取法规则的数组 */
+
+int s[110], n, q, sg[maxn], m;
+
+int getsg(int x)
+{
+    int i;
+    if(sg[x]!=-1) return sg[x];
+    bool hashh[110];  // hashh函数必须放在getsg函数内部
+    memset(hashh, 0, sizeof(hashh));
+    for(i=1;i<=n;i++)
+    {
+        if(x>=s[i])
+        {
+            getsg(x-s[i]);
+            hashh[sg[x-s[i]]]=1;
+        }
+    }
+    int e;
+    for(i=0;;i++)
+    {
+        if(!hashh[i])
+        {
+            e=i;
+            break;
+        }
+    }
+    return sg[x]=e;
+}
+
+
+int main()
+{
+    while(scanf("%d", &n) && n)
+    {
+        for(int i=1;i<=n;i++)
+            scanf("%d", &s[i]);
+        memset(sg, -1, sizeof(sg));
+        sort(s, s+n);
+        scanf("%d", &q);
+        string ans="";
+        while(q--)
+        {
+            int t,res=0;
+            scanf("%d",&m);
+            while(m--)
+            {
+                scanf("%d", &t);
+                res^=getsg(t);
+            }
+            ans += res ? 'W' : 'L';
+        }
+        cout<<ans<<endl;
+    }
+}
+
+// sg打表 
+//size求解范围 f组是可以每次取的值,n是f的长度。
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+const int maxn = 1e4+7;
+
+int s[maxn], k, q, sg[maxn], m;
+bool hashh[maxn];
+
+void getsg(int *f, int n)
+{
+    int i, j;
+    for(i=1;i<maxn;i++)
+    {
+        memset(hashh, 0, sizeof(hashh));
+        for(int j=1;j<=n;j++)
+            if(i-f[j]>=0)
+                hashh[sg[i-f[j]]]=1;
+        for(j=0;j<maxn;j++)
+            if(!hashh[j])
+            break;
+        sg[i]=j;
+    }
+}
+
+int main()
+{
+    while(scanf("%d", &k) && k)
+    {
+        for(int i=1;i<=k;i++)
+            scanf("%d", &s[i]);
+        getsg(s, k);
+        scanf("%d", &q);
+        string ans="";
+        while(q--)
+        {
+            int t,res=0;
+            scanf("%d",&m);
+            while(m--)
+            {
+                scanf("%d", &t);
+                res^=sg[t];
+            }
+            ans += res ? 'W' : 'L';
+        }
+        cout<<ans<<endl;
+    }
+}
